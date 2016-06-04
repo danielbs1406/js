@@ -8,8 +8,9 @@ function getProfile(data){
 
 (function ($) {
 	if (location.href.indexOf('/topic') !== -1) {
+		$(".user_profile").hide();
+
 		$(".c_user").each(function(){
-			
 			var linkForm = $(this).find(".user_profile dd a");
 			if( $(linkForm).length ){
 				$.ajax({
