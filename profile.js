@@ -1,43 +1,47 @@
 function getProfile(data){
-	var sentido = /\[doHTML\]([\s\S]*&lt;span\sclass="sentido"+[\s\S]*\/span&gt;)\[\/doHTML\]/gi;
-	var rank = /\[doHTML\]([\s\S]*&lt;span\sclass="rank"&gt;([\s\S]*)&lt;\/span&gt;)\[\/doHTML\]/gi;
-	var evolucao = /\[doHTML\]([\s\S]*&lt;span\sclass="evol"&gt;[\s\S]*src="([\s\S]*)"[\s\S]*&lt;\/span&gt;)\[\/doHTML\]/gi;
+	var sentido = /&lt;span\sclass=&quot;sentido&quot;&gt;([\s\S]{1,20})&lt;\/span&gt;/gi;
+	var rank =    /&lt;span\sclass=&quot;rank&quot;&gt;([\s\S]{1,10})&lt;\/span&gt;/gi;
+	var evolucao = /&lt;span\sclass=&quot;evol&quot;&gt;<img\ssrc="([\s\S]*\.png)"[\s\S]{1,100}\/>&lt;\/span&gt;/gi
 	
-	var forca = /\[doHTML\]([\s\S]*&lt;span\sclass="for"&gt;([\s\S]*)&lt;\/span&gt;)\[\/doHTML\]/gi;
-	var agi = /\[doHTML\]([\s\S]*&lt;span\sclass="agi"&gt;([\s\S]*)&lt;\/span&gt;)\[\/doHTML\]/gi;
-	var per = /\[doHTML\]([\s\S]*&lt;span\sclass="per"&gt;([\s\S]*)&lt;\/span&gt;)\[\/doHTML\]/gi;
-	var res = /\[doHTML\]([\s\S]*&lt;span\sclass="res"&gt;([\s\S]*)&lt;\/span&gt;)\[\/doHTML\]/gi;
-	var car = /\[doHTML\]([\s\S]*&lt;span\sclass="car"&gt;([\s\S]*)&lt;\/span&gt;)\[\/doHTML\]/gi;
-	var von = /\[doHTML\]([\s\S]*&lt;span\sclass="von"&gt;([\s\S]*)&lt;\/span&gt;)\[\/doHTML\]/gi;
+	var forca = /&lt;span\sclass=&quot;for&quot;&gt;([\s\S]{1,3})&lt;\/span&gt;/gi;
+	var agi = /&lt;span\sclass=&quot;agi&quot;&gt;([\s\S]{1,3})&lt;\/span&gt;/gi;
+	var per = /&lt;span\sclass=&quot;per&quot;&gt;([\s\S]{1,3})&lt;\/span&gt;/gi;
+	var res = /&lt;span\sclass=&quot;res&quot;&gt;([\s\S]{1,3})&lt;\/span&gt;/gi;
+	var car = /&lt;span\sclass=&quot;car&quot;&gt;([\s\S]{1,3})&lt;\/span&gt;/gi;
+	var von = /&lt;span\sclass=&quot;von&quot;&gt;([\s\S]{1,3})&lt;\/span&gt;/gi;
 	
 	var _this = this.obj;
 	var d = data.toString();
 	
-	sentido = sentido.exec(d)[2];
-	rank = rank.exec(d)[2];
-	evolucao = evolucao.exec(d)[2];
+	sentido = sentido.exec(d);
+	rank = rank.exec(d);
+	evolucao = evolucao.exec(d);
 	
-/*	forca = forca.exec(d)[2];
-	agi = agi.exec(d)[2];
-	per = per.exec(d)[2];
-	res = res.exec(d)[2];
-	car = car.exec(d)[2];
-	von = von.exec(d)[2];
-*/
+	forca = forca.exec(d);
+	agi = agi.exec(d);
+	per = per.exec(d);
+	res = res.exec(d);
+	car = car.exec(d);
+	von = von.exec(d);
+
 
 //	var unescape = $('<div />').html(profile[2]).text();
 	
 /*	<dl class="user_profile_custom"><dt>Rank Cósmico:</dt><dd>A-</dd><dt>Sentido:</dt><dd>7º Sentido</dd><dt>Evolução Cósmica:</dt><dd><img src="http://i1016.photobucket.com/albums/af282/Alexjfranca/2star_zpsienoo5wq.png"></dd><dd class="spacer"></dd></dl>
 
 */
-	$(_this).find(".user_profile").after("<dl class=\"user_profile_custom\"><dt>" + rank + "</dd><dt>Sentido:</dt><dd>" + sentido + "</dd><dt>Evolução Cósmica:</dt><dd><img src=\"" + evolucao + "\"></dd></dl>");
+	$(_this).find(".user_profile").after("<dl class=\"user_profile_custom\"><dt>Rank Cósmico:</dt><dd>" + rank[1] + "</dd><dt>Sentido:</dt><dd>" + sentido[1] + "</dd><dt>Evolução Cósmica:</dt><dd><img src=\"" + evolucao[1] + "\"></dd></dl>");
 	
-//	$(_this).find(".user_profile_custom").after()
+	$(_this).find(".user_profile_custom").after("<canvas class=\"user_profile_custom\" style=\"background-color: #0f0f19;\" width=\"175px\" height=\"175px\"></canvas>");
+	var ctx = $(_this).find(".user_profile_custom").get(1).getContext("2d");
+	var arrayVal = [forca[1], res[1], car[1], von[1], per[1], agi[1]];
+	radarData.datasets[0].data = arrayVal.map(Number);
+	var nChart = new Chart(ctx).Radar(radarData, radarOptions);
 };
 
 (function ($) {
 	if (location.href.indexOf('/topic') !== -1) {
-		$(".user_profile").hide();
+		$(".user_profile dd a").parent().hide();
 
 		$(".c_user").each(function(){
 			var linkForm = $(this).find(".user_profile dd a");
